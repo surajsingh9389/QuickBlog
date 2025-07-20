@@ -22,6 +22,9 @@ blogRouter.post("/comments", getBlogComments);
 blogRouter.post("/generate", protectRoute, generateContent);
 
 blogRouter.get("/all", getAllBlogs);
-blogRouter.get("/:blogId", getBlogById);
+blogRouter
+  .route("/:blogId")
+  .get(getBlogById)
+  .all((req, res) => res.status(405).json({ error: "Method Not Allowed" }));
 
 export default blogRouter;
