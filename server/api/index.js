@@ -1,9 +1,9 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
-import connectDB from "./lib/db.js";
-import adminRouter from "./routes/admin.routes.js";
-import blogRouter from "./routes/blog.routes.js";
+import connectDB from "../src/lib/db.js";
+import adminRouter from "../src/routes/admin.routes.js";
+import blogRouter from "../src/routes/blog.routes.js";
 
 
 const app = express();
@@ -24,3 +24,5 @@ app.listen(PORT, () => {
   console.log(`Server is running on Port ${PORT}`);
   connectDB();
 });
+
+
