@@ -147,15 +147,29 @@ export const getBlogComments = async (req, res) => {
   }
 };
 
+// export const generateContent = async (req, res) => {
+//   try {
+//     const { prompt } = req.body;
+//     const content = await main(
+//       prompt + " Generate a blog content for this topic in simple text format"
+//     );
+//     res.status(201).json({ message: "Content generated", content });
+//   } catch (error) {
+//     console.error("Error in generateContent controller:", error.message);
+//     return res.status(500).json({ message: "Internal Server Error" });
+//   }
+// };
+
 export const generateContent = async (req, res) => {
+  console.log("generateContent start");
   try {
     const { prompt } = req.body;
-    const content = await main(
-      prompt + " Generate a blog content for this topic in simple text format"
-    );
-    res.status(201).json({ message: "Content generated", content });
+    console.log("Prompt:", prompt);
+    const content = await main(prompt + " Generate a blog content for this topic in simple text format");
+    console.log("Content received; length:", content.length);
+    return res.status(201).json({ message: "Content generated", content });
   } catch (error) {
-    console.error("Error in generateContent controller:", error.message);
+    console.error("Error in generateContent:", error);
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
