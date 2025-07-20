@@ -23,6 +23,6 @@ blogRouter.post("/toggle-publish", protectRoute, togglePublish);
 blogRouter.post("/add-comment", addComment);
 blogRouter.post("/comments", getBlogComments);
 
-blogRouter.post("/get-content", protectRoute, generateContent);
+blogRouter.post("/generate", protectRoute, generateContent);
 
 export default blogRouter;

@@ -4,6 +4,7 @@ import Blog from "../models/Blog.js";
 import Comment from "../models/Comment.js";
 import main from "../lib/gemini.js";
 import connectDB from "../lib/db.js";
+import mongoose from "mongoose";
 
 await connectDB();
 
@@ -68,6 +69,11 @@ export const getAllBlogs = async (req, res) => {
 
 export const getBlogById = async (req, res) => {
   const { blogId } = req.params;
+
+  if (!mongoose.isValidObjectId(blogId)) {
+    return res.status(404).json({ error: "Blog not found" });
+  }
+
   try {
     const blog = await Blog.findById(blogId);
     if (!blog) {
@@ -147,7 +153,7 @@ export const generateContent = async (req, res) => {
     const content = await main(
       prompt + " Generate a blog content for this topic in simple text format"
     );
-    res.status(201).json({ message: "Content generated", content});
+    res.status(201).json({ message: "Content generated", content });
   } catch (error) {
     console.error("Error in generateContent controller:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
