@@ -56,7 +56,7 @@ const AddBlog = () => {
     if(!form.title) return toast.error('Please enter the title');
     try{
        setGenerating(true);
-       const res = await axios.post("/api/blog/generate", {prompt: form.title});
+       const res = await axios.post("/api/blog/get-content", {prompt: form.title});
        quillRef.current.root.innerHTML = parse(res.data.content);
        toast.success(res.data.message);
     }catch(error){
