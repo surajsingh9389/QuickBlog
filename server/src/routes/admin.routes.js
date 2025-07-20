@@ -6,10 +6,10 @@ const adminRouter = express.Router();
 
 
 adminRouter.post("/login", adminLogin)
+adminRouter.post("/delete-comment", protectRoute, deleteCommentById);
+adminRouter.post("/approve-comment", protectRoute, approveCommentbyId);
 adminRouter.get("/comments", protectRoute, getAllComments);
 adminRouter.get("/blogs", protectRoute, getAllBlogsAdmin);
 adminRouter.get("/dashboard", protectRoute, getDashboard);
-adminRouter.post("/delete-comment", protectRoute, deleteCommentById);
-adminRouter.post("/approve-comment", protectRoute, approveCommentbyId);
 
 export default adminRouter;
