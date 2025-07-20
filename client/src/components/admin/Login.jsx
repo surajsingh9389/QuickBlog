@@ -16,7 +16,7 @@ const Login = () => {
       const res = await axios.post("/api/admin/login", form);
       setToken(res.data.token);
       localStorage.setItem("token", res.data.token);
-      axios.defaults.headers.common["Authorization"] = `${token}`;
+      axios.defaults.headers.common['Authorization'] = `${res.data.token}`;
       toast.success("Login successfully");
     } catch (error) {
       toast.error(error.response.data.message);

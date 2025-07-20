@@ -9,14 +9,13 @@ export const adminLogin = async (req, res) => {
       email !== process.env.ADMIN_EMAIL ||
       password !== process.env.ADMIN_PASSWORD
     ) {
-      return res.status(400).json({ message: "Invalid credentials!" });
+      return res.status(400).json({ message: 'Invalid credentials!' });
     }
-
-    const token = generateToken(email, res);
+    const token = generateToken(email);
     res.status(201).json({ success: true, token });
   } catch (error) {
-    console.log("Error in admin controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error('Error in admin controller', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -77,8 +76,8 @@ export const deleteCommentById = async (req, res) => {
 export const approveCommentbyId = async (req, res) => {
   const { id } = req.body;
   try {
-    await Blog.findByIdAndUpdate(id, { isApproved: true });
-    res.status(200).json({ message: "Comment approved successfully" });
+    await Comment.findByIdAndUpdate(id, { isApproved: true });
+    res.status(200).json({ message: "Comment approve successfully" });
   } catch (error) {
     console.log("Error in approveCommentbyId controller", error.message);
     res.status(500).json({ message: "Internal server Error" });

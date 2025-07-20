@@ -2,6 +2,7 @@ import fs from "fs/promises";
 import imagekit from "../lib/imagekit.js";
 import Blog from "../models/Blog.js";
 import Comment from "../models/Comment.js";
+import main from "../lib/gemini.js";
 
 export const addBlog = async (req, res) => {
   const { title, subTitle, description, category, isPublished } = JSON.parse(
@@ -80,10 +81,8 @@ export const deleteBlogId = async (req, res) => {
   const { blogId } = req.body;
   try {
     await Blog.findByIdAndDelete(blogId);
-    
     // Delete all comments associated with the blog
-    await Comment.deleteMany({blog: id});
-
+    await Comment.deleteMany({ blog: blogId });
     res.status(200).json({ message: "Blog deleted successfully" });
   } catch (error) {
     console.log("Error in deleteBlogId controller", error.message);
@@ -105,34 +104,49 @@ export const togglePublish = async (req, res) => {
 };
 
 export const addComment = async (req, res) => {
-  const {blog, name, content} = req.body;
-  try{
+  const { blog, name, content } = req.body;
+  try {
     if (!blog || !name || !content) {
-    return res.status(400).json({ message: "Missing required fields!" });
-  }
+      return res.status(400).json({ message: "Missing required fields!" });
+    }
 
-  const comment = await Comment.create({
-    blog,
-    name, 
-    content,
-    isApproved: false,
-  })
+    const comment = await Comment.create({
+      blog,
+      name,
+      content,
+      isApproved: false,
+    });
 
-   res.status(201).json({ message: "Comment added for review",  comment});
-  }catch(error){
+    res.status(201).json({ message: "Comment added for review", comment });
+  } catch (error) {
     console.error("Error in addComment controller:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
   }
-}
+};
 
 export const getBlogComments = async (req, res) => {
-   try{
-    const {blogId} = req.body;
-    const comments = await Comment.find({blog: blogId, isApproved: true}).sort({createdAt: -1})
+  try {
+    const { blogId } = req.body;
+    const comments = await Comment.find({
+      blog: blogId,
+      isApproved: true,
+    }).sort({ createdAt: -1 });
     res.status(200).json(comments);
-   }catch(error){
+  } catch (error) {
     console.error("Error in getBlogComment controller:", error.message);
     return res.status(500).json({ message: "Internal Server Error" });
-   }
-}
+  }
+};
 
+export const generateContent = async (req, res) => {
+  try {
+    const { prompt } = req.body;
+    const content = await main(
+      prompt + " Generate a blog content for this topic in simple text format"
+    );
+    res.status(201).json({ message: "Content generated", content});
+  } catch (error) {
+    console.error("Error in generateContent controller:", error.message);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
