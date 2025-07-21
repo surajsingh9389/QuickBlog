@@ -163,7 +163,7 @@ export const getBlogComments = async (req, res) => {
 export const generateContent = async (req, res) => {
   try {
     const { prompt } = req.body;
-    const content = await main(prompt + " Generate a blog content aroud 400 words for this topic in simple text format and do not give me the line for answering my request - Generate a blog content aroud 400 words for this topic in simple text format");
+    const content = await main(prompt + " Generate a blog content with headings aroud 400 words for this topic in simple text format and do not give me the line for answering my request - Generate a blog content aroud 400 words for this topic in simple text format");
     return res.status(201).json({ message: "Content generated", content });
   } catch (error) {
     console.error("Error in generateContent:", error);
