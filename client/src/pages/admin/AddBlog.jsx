@@ -3,7 +3,7 @@ import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
-import { parse } from "marked"
+import { parse } from "marked";
 
 const AddBlog = () => {
   const editorRef = useRef(null);
@@ -53,18 +53,31 @@ const AddBlog = () => {
   };
 
   const generateContent = async () => {
-    if(!form.title) return toast.error('Please enter the title');
-    try{
-       setGenerating(true);
-       const res = await axios.post("/api/blog/generate", {prompt: form.title});
-       quillRef.current.root.innerHTML = parse(res.data.content);
-       toast.success(res.data.message);
-    }catch(error){
-      toast.error(error.response.data.message);
-    }finally{
+    if (!form.title) return toast.error("Please enter the title");
+    try {
+      setGenerating(true);
+      const res = await axios.post("/api/blog/generate", {
+        prompt: form.title,
+      });
+      if (!res || !res.data) {
+        console.error("Empty or malformed response:", res);
+        toast.error("No data returned — please try again");
+        return;
+      }
+      if (!res.data.content) {
+        console.error("Missing content field:", res.data);
+        toast.error("No content returned — check server logs");
+        return;
+      }
+      quillRef.current.root.innerHTML = parse(res.data.content);
+      toast.success(res.data.message);
+    } catch (error) {
+      const message =
+        err.response?.data?.message || err.message || "Unknown error occurred";
+      toast.error(message);
+    } finally {
       setGenerating(false);
     }
-
   };
 
   useEffect(() => {
@@ -123,16 +136,20 @@ const AddBlog = () => {
         <p className="mt-4">Blog Description</p>
         <div className="max-w-lg h-74 pb-16 sm:pb-10 pt-2 relative">
           <div ref={editorRef}></div>
-          {generating && (<div className="absolute right-0 top-0 bottom-0 left-0 flex items-center justify-center bg-black/10 mt-2">
-          <div className="size-8 rounded-full border-2 border-t-white animate-spin"></div>
-          </div>)}
+          {generating && (
+            <div className="absolute right-0 top-0 bottom-0 left-0 flex items-center justify-center bg-black/10 mt-2">
+              <div className="size-8 rounded-full border-2 border-t-white animate-spin"></div>
+            </div>
+          )}
           <button
             disabled={generating}
-            className={`absolute bottom-1 right-2 ml-2 text-xs text-white ${generating ? "bg-black/40": "bg-black/70 hover:underline"} px-4 py-1.5 rounded cursor-pointer`}
+            className={`absolute bottom-1 right-2 ml-2 text-xs text-white ${
+              generating ? "bg-black/40" : "bg-black/70 hover:underline"
+            } px-4 py-1.5 rounded cursor-pointer`}
             type="button"
             onClick={generateContent}
           >
-            {generating ? "Generating....": "Generate with AI"}
+            {generating ? "Generating...." : "Generate with AI"}
           </button>
         </div>
 
