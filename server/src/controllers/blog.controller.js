@@ -165,7 +165,7 @@ export const generateContent = async (req, res) => {
   try {
     const { prompt } = req.body;
     console.log("Prompt:", prompt);
-    const content = await main(prompt + " Generate a blog content for this topic in simple text format");
+    const content = await main(prompt + " Generate a blog content 4-5 line for this topic in simple text format");
     console.log("Content received; length:", content.length);
     return res.status(201).json({ message: "Content generated", content });
   } catch (error) {
