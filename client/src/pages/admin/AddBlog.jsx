@@ -51,8 +51,8 @@ const AddBlog = () => {
       setIsAdding(false);
     }
   };
-
-  const generateContent = async () => {
+  
+   const generateContent = async () => {
     if (!form.title) return toast.error("Please enter the title");
     try {
       setGenerating(true);
@@ -78,7 +78,7 @@ const AddBlog = () => {
     } finally {
       setGenerating(false);
     }
-  };
+  } 
 
   useEffect(() => {
     // Initiate Quill only once
