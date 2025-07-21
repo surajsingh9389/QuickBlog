@@ -51,34 +51,58 @@ const AddBlog = () => {
       setIsAdding(false);
     }
   };
-  
-   const generateContent = async () => {
-    if (!form.title) return toast.error("Please enter the title");
-    try {
-      setGenerating(true);
-      const res = await axios.post("/api/blog/generate", {
-        prompt: form.title,
-      });
-      if (!res || !res.data) {
-        console.error("Empty or malformed response:", res);
-        toast.error("No data returned — please try again");
-        return;
+
+  const PROMPT_SECTIONS = [
+    {
+      label: "Introduction",
+      instr:
+        "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
+    },
+    {
+      label: "Main Section 1",
+      instr:
+        "Write ~100 words with a subheading explaining the first key point in simple text format.",
+    },
+    {
+      label: "Main Section 2",
+      instr:
+        "Write ~100 words under a subheading covering the second key point in simple text format.",
+    },
+    {
+      label: "Main Section 3",
+      instr:
+        "Write ~100 words under a subheading covering the third key point in simple text format.",
+    },
+    {
+      label: "Conclusion",
+      instr:
+        "Write a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
+    },
+  ];
+  const generateContent = async () => {
+    if (!form.title) return toast.error("Enter a title");
+
+    let full = "";
+    setGenerating(true);
+
+    for (let part = 0; part < PROMPT_SECTIONS.length; part++) {
+      toast(`Building: ${PROMPT_SECTIONS[part].label}...`);
+      try {
+        const { data } = await axios.post("/api/blog/generate", {
+          prompt: form.title,
+          part,
+        });
+        full += part === 0 ? data.content : `\n\n${data.content}`;
+        quillRef.current.root.innerHTML = parse(full);
+      } catch (err) {
+        toast.error(`Failed at ${PROMPT_SECTIONS[part].label}`);
+        break;
       }
-      if (!res.data.content) {
-        console.error("Missing content field:", res.data);
-        toast.error("No content returned — check server logs");
-        return;
-      }
-      quillRef.current.root.innerHTML = parse(res.data.content);
-      toast.success(res.data.message);
-    } catch (error) {
-      const message =
-        err.response?.data?.message || err.message || "Unknown error occurred";
-      toast.error(message);
-    } finally {
-      setGenerating(false);
     }
-  } 
+
+    setGenerating(false);
+    toast.success("Blog generated!");
+  };
 
   useEffect(() => {
     // Initiate Quill only once

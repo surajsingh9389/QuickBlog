@@ -8,6 +8,14 @@ import mongoose from "mongoose";
 
 await connectDB();
 
+const PROMPT_SECTIONS = [
+  { label: "Introduction", instr: "Write a 4–6 sentence engaging intro that hooks the reader in simple text format." },
+  { label: "Main Section 1", instr: "Write ~100 words with a subheading explaining the first key point in simple text format." },
+  { label: "Main Section 2", instr: "Write ~100 words under a subheading covering the second key point in simple text format." },
+  { label: "Main Section 3", instr: "Write ~100 words under a subheading covering the third key point in simple text format." },
+  { label: "Conclusion", instr: "Write a 2–3 sentence concluding paragraph with a call-to-action in simple text format." }
+];
+
 export const addBlog = async (req, res) => {
   const { title, subTitle, description, category, isPublished } = JSON.parse(
     req.body.blog
@@ -161,13 +169,15 @@ export const getBlogComments = async (req, res) => {
 // };
 
 export const generateContent = async (req, res) => {
+ const { prompt, part = 0 } = req.body;
+  const { label, instr } = PROMPT_SECTIONS[part];
   try {
-    const { prompt } = req.body;
-    const content = await main(prompt + " Generate a blog content with headings aroud 400 words for this topic in simple text format and do not give me the line for answering my request - Generate a blog content aroud 400 words for this topic in simple text format");
-    return res.status(201).json({ message: "Content generated", content });
-  } catch (error) {
-    console.error("Error in generateContent:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    const fullPrompt = `${prompt}\n\nInstruction: ${instr}`;
+    const content = await main(fullPrompt);
+    return res.status(200).json({ content: content.trim(), part });
+  } catch (err) {
+    console.error('Error generating', label, err);
+    res.status(500).json({ message: `Error generating section ${label}` });
   }
 };
 
