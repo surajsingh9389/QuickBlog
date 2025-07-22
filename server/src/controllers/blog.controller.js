@@ -17,17 +17,17 @@ const PROMPT_SECTIONS = [
   {
     label: "Main Section 1",
     instr:
-      "Write strictly between 100-200 words with a subheading explaining the first key point in simple text format.",
+      "Write strictly in 100 words at maximum with a subheading explaining the first key point in simple text format.",
   },
   {
     label: "Main Section 2",
     instr:
-      "Write strictly between 100-200 words under a subheading covering the second key point in simple text format.",
+      "Write strictly in 100 words at maximum under a subheading covering the second key point in simple text format.",
   },
   {
     label: "Main Section 3",
     instr:
-      "Write strictly between 100-200 words under a subheading covering the third key point in simple text format.",
+      "Write strictly in 100 words at maximum under a subheading covering the third key point in simple text format.",
   },
   {
     label: "Conclusion",
