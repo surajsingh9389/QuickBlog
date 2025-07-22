@@ -86,7 +86,7 @@ const AddBlog = () => {
     setGenerating(true);
 
     for (let part = 0; part < PROMPT_SECTIONS.length; part++) {
-      toast(`Building: ${PROMPT_SECTIONS[part].label}...`);
+      toast(`Building...`);
       try {
         const { data } = await axios.post("/api/blog/generate", {
           prompt: form.title,
