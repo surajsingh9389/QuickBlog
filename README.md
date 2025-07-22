@@ -31,6 +31,7 @@
 - **Node.js & Express.js**
 - **MongoDB** with Mongoose
 - **JWT** for authentication
+- **Multer** for client-to-server image uploads
 - **ImageKit** for image storage
 - **Gemini API** for AI-generated content
 
