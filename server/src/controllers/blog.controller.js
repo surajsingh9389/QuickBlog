@@ -87,7 +87,7 @@ export const addBlog = async (req, res) => {
 
 export const getAllBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find({ isPublished: true });
+    const blogs = await Blog.find({ isPublished: true }).sort({ createdAt: -1 });
     res.status(200).json(blogs);
   } catch (error) {
     console.log("Error in getAllBlogs controller", error.message);
