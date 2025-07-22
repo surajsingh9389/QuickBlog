@@ -52,33 +52,13 @@ const AddBlog = () => {
     }
   };
 
-  const PROMPT_SECTIONS = [
-    {
-      label: "Introduction",
-      instr:
-        "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
-    },
-    {
-      label: "Main Section 1",
-      instr:
-        "Write ~100 words with a subheading explaining the first key point in simple text format.",
-    },
-    {
-      label: "Main Section 2",
-      instr:
-        "Write ~100 words under a subheading covering the second key point in simple text format.",
-    },
-    {
-      label: "Main Section 3",
-      instr:
-        "Write ~100 words under a subheading covering the third key point in simple text format.",
-    },
-    {
-      label: "Conclusion",
-      instr:
-        "Write a 1–2 sentence concluding paragraph with a call-to-action in simple text format.",
-    },
-  ];
+ const PROMPT_SECTIONS = [
+   { label: "Introduction", instr: "Write a 4–6 sentence engaging intro that hooks the reader in simple text format." },
+   { label: "Main Section 1", instr: "Write strictly between 100-200 words with a subheading explaining the first key point in simple text format." },
+   { label: "Main Section 2", instr: "Write strictly between 100-200 words under a subheading covering the second key point in simple text format." },
+   { label: "Main Section 3", instr: "Write strictly between 100-200 words under a subheading covering the third key point in simple text format." },
+   { label: "Conclusion", instr: "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format." }
+ ];
   const generateContent = async () => {
     if (!form.title) return toast.error("Enter a title");
 

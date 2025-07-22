@@ -9,11 +9,31 @@ import mongoose from "mongoose";
 await connectDB();
 
 const PROMPT_SECTIONS = [
-  { label: "Introduction", instr: "Write a 4–6 sentence engaging intro that hooks the reader in simple text format." },
-  { label: "Main Section 1", instr: "Write ~100 words with a subheading explaining the first key point in simple text format." },
-  { label: "Main Section 2", instr: "Write ~100 words under a subheading covering the second key point in simple text format." },
-  { label: "Main Section 3", instr: "Write ~100 words under a subheading covering the third key point in simple text format." },
-  { label: "Conclusion", instr: "Write a 1–2 sentence concluding paragraph with a call-to-action in simple text format." }
+  {
+    label: "Introduction",
+    instr:
+      "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
+  },
+  {
+    label: "Main Section 1",
+    instr:
+      "Write strictly between 100-200 words with a subheading explaining the first key point in simple text format.",
+  },
+  {
+    label: "Main Section 2",
+    instr:
+      "Write strictly between 100-200 words under a subheading covering the second key point in simple text format.",
+  },
+  {
+    label: "Main Section 3",
+    instr:
+      "Write strictly between 100-200 words under a subheading covering the third key point in simple text format.",
+  },
+  {
+    label: "Conclusion",
+    instr:
+      "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
+  },
 ];
 
 export const addBlog = async (req, res) => {
@@ -169,15 +189,15 @@ export const getBlogComments = async (req, res) => {
 // };
 
 export const generateContent = async (req, res) => {
- const { prompt, part = 0 } = req.body;
+  console.log("Size of request body:", JSON.stringify(req.body).length);
+  const { prompt, part = 0 } = req.body;
   const { label, instr } = PROMPT_SECTIONS[part];
   try {
     const fullPrompt = `${prompt}\n\nInstruction: ${instr}`;
     const content = await main(fullPrompt);
     return res.status(200).json({ content: content.trim(), part });
   } catch (err) {
-    console.error('Error generating', label, err);
+    console.error("Error generating", label, err);
     res.status(500).json({ message: `Error generating section ${label}` });
   }
 };
-
