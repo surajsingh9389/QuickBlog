@@ -95,7 +95,7 @@ const AddBlog = () => {
         full += part === 0 ? data.content : `\n\n${data.content}`;
         quillRef.current.root.innerHTML = parse(full);
       } catch (err) {
-        toast.error(`Failed at ${PROMPT_SECTIONS[part].label}`);
+        toast.error(`Failed to generate try again!`);
         break;
       }
     }
