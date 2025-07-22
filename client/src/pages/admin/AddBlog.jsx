@@ -76,7 +76,7 @@ const AddBlog = () => {
     {
       label: "Conclusion",
       instr:
-        "Write a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
+        "Write a 1–2 sentence concluding paragraph with a call-to-action in simple text format.",
     },
   ];
   const generateContent = async () => {

@@ -13,7 +13,7 @@ const PROMPT_SECTIONS = [
   { label: "Main Section 1", instr: "Write ~100 words with a subheading explaining the first key point in simple text format." },
   { label: "Main Section 2", instr: "Write ~100 words under a subheading covering the second key point in simple text format." },
   { label: "Main Section 3", instr: "Write ~100 words under a subheading covering the third key point in simple text format." },
-  { label: "Conclusion", instr: "Write a 2–3 sentence concluding paragraph with a call-to-action in simple text format." }
+  { label: "Conclusion", instr: "Write a 1–2 sentence concluding paragraph with a call-to-action in simple text format." }
 ];
 
 export const addBlog = async (req, res) => {
