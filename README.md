@@ -20,6 +20,7 @@
 
 ### Frontend
 - **React.js** with Hooks
+- **Context API** for global state 
 - **Quill Editor** for blog content
 - **Tailwind CSS** for styling
 - **Axios** for HTTP requests
