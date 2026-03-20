@@ -115,7 +115,7 @@ export const getBlogById = async (req, res) => {
 };
 
 export const deleteBlogId = async (req, res) => {
-  const { blogId } = req.body;
+  const { blogId } = req.params;
   try {
     await Blog.findByIdAndDelete(blogId);
     // Delete all comments associated with the blog
@@ -128,7 +128,7 @@ export const deleteBlogId = async (req, res) => {
 };
 
 export const togglePublish = async (req, res) => {
-  const { blogId } = req.body;
+  const { blogId } = req.params;
   try {
     const blog = await Blog.findById(blogId);
     blog.isPublished = !blog.isPublished;
@@ -163,7 +163,7 @@ export const addComment = async (req, res) => {
 
 export const getBlogComments = async (req, res) => {
   try {
-    const { blogId } = req.body;
+    const { blogId } = req.params;
     const comments = await Comment.find({
       blog: blogId,
       isApproved: true,

@@ -36,7 +36,7 @@ const AddBlog = () => {
       formData.append("blog", JSON.stringify(blog));
       formData.append("image", image);
 
-      const res = await axios.post("/api/blog/add", formData);
+      const res = await axios.post("/api/blog", formData);
       toast.success(res.data.message);
       setForm({
         title: "",

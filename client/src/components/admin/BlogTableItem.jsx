@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react'
 import { assets } from '../../assets/assets';
 import { useAppContext } from '../../context/AppContext';
 import toast from 'react-hot-toast';
@@ -12,7 +11,7 @@ const BlogTableItem = ({blog, fetchBlogs, index}) => {
         const message = window.confirm("Are sure you want to delete this blog?");
         if(!message) return;
         try{
-          const res = await axios.post('/api/blog/delete', {blogId: blog._id});
+           const res = await axios.delete(`/api/blog/${blog._id}`)
           toast.success(res.data.message);
           await fetchBlogs()
         }catch(error){
@@ -22,7 +21,7 @@ const BlogTableItem = ({blog, fetchBlogs, index}) => {
 
     const togglePublish = async () =>{
       try{
-        const res = await axios.post('/api/blog/toggle-publish', {blogId: blog._id});
+        const res = await axios.patch(`/api/blog/${blog._id}/publish`);
         toast.success(res.data.message);
         await fetchBlogs()
       }catch(error){

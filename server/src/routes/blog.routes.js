@@ -15,17 +15,29 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 const blogRouter = express.Router();
 
-blogRouter.post("/add", protectRoute, upload.single("image"), asyncHandler(addBlog));
-blogRouter.post("/delete", protectRoute, asyncHandler(deleteBlogId));
-blogRouter.post("/toggle-publish", protectRoute, asyncHandler(togglePublish));
-blogRouter.post("/add-comment", asyncHandler(addComment));
-blogRouter.post("/comments", asyncHandler(getBlogComments));
+// Create blog 
+blogRouter.post("/", protectRoute, upload.single("image"), asyncHandler(addBlog));
+
+// Get all blogs 
+blogRouter.get("/", asyncHandler(getAllBlogs));
+
+// Get single blog 
+blogRouter.get("/:blogId", asyncHandler(getBlogById));
+
+// Delete blog 
+blogRouter.delete("/:blogId", protectRoute, asyncHandler(deleteBlogId));
+
+// Toggle pulish 
+blogRouter.patch("/:blogId/publish", protectRoute, asyncHandler(togglePublish));
+
+// Add comment to blog 
+blogRouter.post("/comments", asyncHandler(addComment));
+
+// Get comments of a blog
+blogRouter.get("/:blogId/comments", asyncHandler(getBlogComments));
+
+// Ai content generation
 blogRouter.post("/generate", protectRoute, asyncHandler(generateContent));
 
-blogRouter.get("/all", asyncHandler(getAllBlogs));
-blogRouter
-  .route("/:blogId")
-  .get(asyncHandler(getBlogById))
-  .all((req, res) => res.status(405).json({ error: "Method Not Allowed" }));
 
 export default blogRouter;

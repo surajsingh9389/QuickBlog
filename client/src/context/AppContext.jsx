@@ -15,7 +15,7 @@ export const AppProvider = ({ children }) => {
 
   const fetchBlogs = async () => {
     try {
-      const res = await axios.get("/api/blog/all");
+      const res = await axios.get("/api/blog");
       setBlogs(res.data);
     } catch (error) {
       toast.error(error.response.data.message);

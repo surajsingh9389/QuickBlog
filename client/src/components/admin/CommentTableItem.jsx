@@ -11,7 +11,7 @@ const CommentTableItem = ({ comment, fetchComments }) => {
 
   const approveComment = async() => {
     try {
-      const res = await axios.post("/api/admin/approve-comment", { id: _id });
+      const res = await axios.patch(`/api/admin/comments/${_id}/approve`);
       toast.success(res.data.message);
       await fetchComments();
     } catch (error) {
@@ -23,7 +23,7 @@ const CommentTableItem = ({ comment, fetchComments }) => {
     const message = confirm("Are you sure you want to delete this comment?");
     if (!message) return;
     try {
-      const res = await axios.post("/api/admin/delete-comment", { id: _id });
+      const res = await axios.delete(`/api/admin/comments/${ _id}`);
       toast.success(res.data.message);
       await fetchComments();
     } catch (error) {

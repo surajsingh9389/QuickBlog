@@ -63,7 +63,7 @@ export const getDashboard = async (req, res) => {
 };
 
 export const deleteCommentById = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     await Comment.findByIdAndDelete(id);
     res.status(200).json({ message: "Comment deleted successfully" });
@@ -74,7 +74,7 @@ export const deleteCommentById = async (req, res) => {
 };
 
 export const approveCommentbyId = async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   try {
     await Comment.findByIdAndUpdate(id, { isApproved: true });
     res.status(200).json({ message: "Comment approve successfully" });
