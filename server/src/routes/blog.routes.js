@@ -11,20 +11,21 @@ import {
 } from "../controllers/blog.controller.js";
 import upload from "../middleware/multer.js";
 import protectRoute from "../middleware/auth.middleware.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 const blogRouter = express.Router();
 
-blogRouter.post("/add", upload.single("image"), protectRoute, addBlog);
-blogRouter.post("/delete", protectRoute, deleteBlogId);
-blogRouter.post("/toggle-publish", protectRoute, togglePublish);
-blogRouter.post("/add-comment", addComment);
-blogRouter.post("/comments", getBlogComments);
-blogRouter.post("/generate", protectRoute, generateContent);
+blogRouter.post("/add", protectRoute, upload.single("image"), asyncHandler(addBlog));
+blogRouter.post("/delete", protectRoute, asyncHandler(deleteBlogId));
+blogRouter.post("/toggle-publish", protectRoute, asyncHandler(togglePublish));
+blogRouter.post("/add-comment", asyncHandler(addComment));
+blogRouter.post("/comments", asyncHandler(getBlogComments));
+blogRouter.post("/generate", protectRoute, asyncHandler(generateContent));
 
-blogRouter.get("/all", getAllBlogs);
+blogRouter.get("/all", asyncHandler(getAllBlogs));
 blogRouter
   .route("/:blogId")
-  .get(getBlogById)
+  .get(asyncHandler(getBlogById))
   .all((req, res) => res.status(405).json({ error: "Method Not Allowed" }));
 
 export default blogRouter;
