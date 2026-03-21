@@ -5,7 +5,7 @@ export const validate = (schema) => (req, res, next) => {
     req.body = schema.parse(req.body);
     next();
   } catch (error) {
-    const message = error.errors?.[0]?.message || "Validation failed";
+    const message = error.issues?.[0]?.message || "Validation failed";
     next(new AppError(message, 400));
   }
 };
