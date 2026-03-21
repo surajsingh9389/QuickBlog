@@ -22,11 +22,6 @@ const AddBlog = () => {
 
   const { axios } = useAppContext();
 
-  // const [title, setTitle] = useState('')
-  // const [subTitle, setSubTitle] = useState('')
-  // const [category, setCategory] = useState('All')
-  // const [isPublished, setIsPublished] = useState(false)
-
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -45,6 +40,7 @@ const AddBlog = () => {
         isPublished: false,
       });
       quillRef.current.root.innerHTML = "";
+      
     } catch (error) {
       toast.error(error.response.data.message);
     } finally {
@@ -94,7 +90,7 @@ const AddBlog = () => {
         });
         full += part === 0 ? data.content : `\n\n${data.content}`;
         quillRef.current.root.innerHTML = parse(full);
-      } catch (err) {
+      } catch (error) {
         toast.error(`Failed to generate try again!`);
         break;
       }

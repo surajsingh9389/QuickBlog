@@ -6,7 +6,6 @@ import main from "../lib/gemini.js";
 import mongoose from "mongoose";
 import { AppError } from "../utils/AppError.js";
 
-
 const PROMPT_SECTIONS = [
   {
     label: "Introduction",
@@ -156,9 +155,10 @@ export const togglePublish = async (req, res, next) => {
 };
 
 export const addComment = async (req, res, next) => {
-  const { blog, name, content } = req.body;
+  const { name, content } = req.body;
+  const { blogId } = req.params;
 
-  if (!mongoose.isValidObjectId(blog)) {
+  if (!mongoose.isValidObjectId(blogId)) {
     throw new AppError("Invalid blog ID", 400);
   }
 
@@ -166,14 +166,14 @@ export const addComment = async (req, res, next) => {
     throw new AppError("Missing required fields!", 400);
   }
 
-  const blogExists = await Blog.findById(blog);
+  const blog = await Blog.findById(blogId);
 
-  if (!blogExists) {
+  if (!blog) {
     throw new AppError("Blog not found", 404);
   }
 
   const comment = await Comment.create({
-    blog,
+    blog: blogId,
     name,
     content,
     isApproved: false,
@@ -219,5 +219,5 @@ export const generateContent = async (req, res, next) => {
   }
   const fullPrompt = `${prompt}\n\nInstruction: ${instr}`;
   const content = await main(fullPrompt);
-  return res.status(200).json({success: true, content: content.trim(), part });
+  return res.status(200).json({ success: true, content: content.trim(), part });
 };

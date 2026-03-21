@@ -31,7 +31,7 @@ blogRouter.delete("/:blogId", protectRoute, asyncHandler(deleteBlogId));
 blogRouter.patch("/:blogId/publish", protectRoute, asyncHandler(togglePublish));
 
 // Add comment to blog 
-blogRouter.post("/comments", asyncHandler(addComment));
+blogRouter.post("/:blogId/comments", asyncHandler(addComment));
 
 // Get comments of a blog
 blogRouter.get("/:blogId/comments", asyncHandler(getBlogComments));

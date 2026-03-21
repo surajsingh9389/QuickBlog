@@ -39,7 +39,7 @@ const Blog = () => {
   const addComment = async (e) => {
      e.preventDefault();
      try{
-      const res = await axios.post(`/api/blogs/comments`, {blog: id, name, content});
+      const res = await axios.post(`/api/blogs/${id}/comments`, {name, content});
       toast.success(res.data.message);
       setName('');
       setContent('');
