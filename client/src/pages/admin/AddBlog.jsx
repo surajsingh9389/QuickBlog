@@ -36,7 +36,7 @@ const AddBlog = () => {
       formData.append("blog", JSON.stringify(blog));
       formData.append("image", image);
 
-      const res = await axios.post("/api/blog", formData);
+      const res = await axios.post("/api/blogs", formData);
       toast.success(res.data.message);
       setForm({
         title: "",
@@ -88,7 +88,7 @@ const AddBlog = () => {
     for (let part = 0; part < PROMPT_SECTIONS.length; part++) {
       toast(`Building...`);
       try {
-        const { data } = await axios.post("/api/blog/generate", {
+        const { data } = await axios.post("/api/blogs/generate", {
           prompt: form.title,
           part,
         });

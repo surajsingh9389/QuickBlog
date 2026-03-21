@@ -11,7 +11,7 @@ const BlogTableItem = ({blog, fetchBlogs, index}) => {
         const message = window.confirm("Are sure you want to delete this blog?");
         if(!message) return;
         try{
-           const res = await axios.delete(`/api/blog/${blog._id}`)
+           const res = await axios.delete(`/api/blogs/${blog._id}`)
           toast.success(res.data.message);
           await fetchBlogs()
         }catch(error){
@@ -21,7 +21,7 @@ const BlogTableItem = ({blog, fetchBlogs, index}) => {
 
     const togglePublish = async () =>{
       try{
-        const res = await axios.patch(`/api/blog/${blog._id}/publish`);
+        const res = await axios.patch(`/api/blogs/${blog._id}/publish`);
         toast.success(res.data.message);
         await fetchBlogs()
       }catch(error){

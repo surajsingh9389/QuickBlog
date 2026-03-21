@@ -3,10 +3,9 @@ import imagekit from "../lib/imagekit.js";
 import Blog from "../models/Blog.js";
 import Comment from "../models/Comment.js";
 import main from "../lib/gemini.js";
-import connectDB from "../lib/db.js";
 import mongoose from "mongoose";
+import { AppError } from "../utils/AppError.js";
 
-await connectDB();
 
 const PROMPT_SECTIONS = [
   {
@@ -36,17 +35,25 @@ const PROMPT_SECTIONS = [
   },
 ];
 
-export const addBlog = async (req, res) => {
-  const { title, subTitle, description, category, isPublished } = JSON.parse(
-    req.body.blog
-  );
+export const addBlog = async (req, res, next) => {
+  let parsedData;
+
+  try {
+    parsedData = JSON.parse(req.body.blog);
+  } catch (err) {
+    throw new AppError("Invalid blog data format", 400);
+  }
+
+  const { title, subTitle, description, category, isPublished } = parsedData;
+
   const imageFile = req.file;
 
-  if (!title || !description || !category || !imageFile) {
-    return res.status(400).json({ message: "Missing required fields!" });
+  if (!title?.trim() || !description?.trim() || !category || !imageFile) {
+    throw new AppError("Missing required fields!", 400);
   }
+
   if (!imageFile.mimetype.startsWith("image/")) {
-    return res.status(400).json({ message: "Only images are allowed" });
+    throw new AppError("Only images are allowed", 400);
   }
 
   try {
@@ -78,126 +85,139 @@ export const addBlog = async (req, res) => {
       isPublished,
     });
 
-    res.status(201).json({ message: "Blog added successfully", blog });
+    res
+      .status(201)
+      .json({ success: true, message: "Blog added successfully", blog });
   } catch (error) {
-    console.error("Error in blog controller:", error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    if (imageFile?.path) {
+      await fs.unlink(imageFile.path).catch(() => {});
+    }
+    throw error;
   }
 };
 
-export const getAllBlogs = async (req, res) => {
-  try {
-    const blogs = await Blog.find({ isPublished: true }).sort({ createdAt: -1 });
-    res.status(200).json(blogs);
-  } catch (error) {
-    console.log("Error in getAllBlogs controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+export const getAllBlogs = async (req, res, next) => {
+  const blogs = await Blog.find({ isPublished: true }).sort({
+    createdAt: -1,
+  });
+  res.status(200).json({ success: true, blogs });
 };
 
-export const getBlogById = async (req, res) => {
+export const getBlogById = async (req, res, next) => {
   const { blogId } = req.params;
 
   if (!mongoose.isValidObjectId(blogId)) {
-    return res.status(404).json({ error: "Blog not found" });
+    throw new AppError("Blog not found", 404);
   }
 
-  try {
-    const blog = await Blog.findById(blogId);
-    if (!blog) {
-      return res.status(400).json({ message: "Blog not found" });
-    }
-    res.status(200).json(blog);
-  } catch (error) {
-    console.log("Error in getById controller", error.message);
-    res.status(500).json({ message: "Internal server Error" });
+  const blog = await Blog.findById(blogId);
+  if (!blog) {
+    throw new AppError("Blog not found", 404);
   }
+  res.status(200).json({ success: true, blog });
 };
 
-export const deleteBlogId = async (req, res) => {
+export const deleteBlogId = async (req, res, next) => {
   const { blogId } = req.params;
-  try {
-    await Blog.findByIdAndDelete(blogId);
-    // Delete all comments associated with the blog
-    await Comment.deleteMany({ blog: blogId });
-    res.status(200).json({ message: "Blog deleted successfully" });
-  } catch (error) {
-    console.log("Error in deleteBlogId controller", error.message);
-    res.status(500).json({ message: "Internal server Error" });
+
+  if (!mongoose.isValidObjectId(blogId)) {
+    throw new AppError("Invalid blog ID", 400);
   }
+
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
+    throw new AppError("Blog not found", 404);
+  }
+
+  await Blog.findByIdAndDelete(blogId);
+  // Delete all comments associated with the blog
+  await Comment.deleteMany({ blog: blogId });
+
+  res.status(200).json({ success: true, message: "Blog deleted successfully" });
 };
 
-export const togglePublish = async (req, res) => {
+export const togglePublish = async (req, res, next) => {
   const { blogId } = req.params;
-  try {
-    const blog = await Blog.findById(blogId);
-    blog.isPublished = !blog.isPublished;
-    await blog.save();
-    res.status(200).json({ message: "Blog status updated" });
-  } catch (error) {
-    console.log("Error in togglePublish controller", error.message);
-    res.status(500).json({ message: "Internal server Error" });
+
+  if (!mongoose.isValidObjectId(blogId)) {
+    throw new AppError("Invalid blog ID", 400);
   }
+
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
+    throw new AppError("Blog not found", 404);
+  }
+
+  blog.isPublished = !blog.isPublished;
+  await blog.save();
+  res.status(200).json({ success: true, message: "Blog status updated" });
 };
 
-export const addComment = async (req, res) => {
+export const addComment = async (req, res, next) => {
   const { blog, name, content } = req.body;
-  try {
-    if (!blog || !name || !content) {
-      return res.status(400).json({ message: "Missing required fields!" });
-    }
 
-    const comment = await Comment.create({
-      blog,
-      name,
-      content,
-      isApproved: false,
-    });
-
-    res.status(201).json({ message: "Comment added for review", comment });
-  } catch (error) {
-    console.error("Error in addComment controller:", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+  if (!mongoose.isValidObjectId(blog)) {
+    throw new AppError("Invalid blog ID", 400);
   }
+
+  if (!name?.trim() || !content) {
+    throw new AppError("Missing required fields!", 400);
+  }
+
+  const blogExists = await Blog.findById(blog);
+
+  if (!blogExists) {
+    throw new AppError("Blog not found", 404);
+  }
+
+  const comment = await Comment.create({
+    blog,
+    name,
+    content,
+    isApproved: false,
+  });
+
+  res
+    .status(201)
+    .json({ success: true, message: "Comment added for review", comment });
 };
 
-export const getBlogComments = async (req, res) => {
-  try {
-    const { blogId } = req.params;
-    const comments = await Comment.find({
-      blog: blogId,
-      isApproved: true,
-    }).sort({ createdAt: -1 });
-    res.status(200).json(comments);
-  } catch (error) {
-    console.error("Error in getBlogComment controller:", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
+export const getBlogComments = async (req, res, next) => {
+  const { blogId } = req.params;
+
+  if (!mongoose.isValidObjectId(blogId)) {
+    throw new AppError("Invalid blog ID", 400);
   }
+
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
+    throw new AppError("Blog not found", 404);
+  }
+
+  const comments = await Comment.find({
+    blog: blogId,
+    isApproved: true,
+  }).sort({ createdAt: -1 });
+
+  res.status(200).json({ success: true, comments });
 };
 
-// export const generateContent = async (req, res) => {
-//   try {
-//     const { prompt } = req.body;
-//     const content = await main(
-//       prompt + " Generate a blog content for this topic in simple text format"
-//     );
-//     res.status(201).json({ message: "Content generated", content });
-//   } catch (error) {
-//     console.error("Error in generateContent controller:", error.message);
-//     return res.status(500).json({ message: "Internal Server Error" });
-//   }
-// };
-
-export const generateContent = async (req, res) => {
-  console.log("Size of request body:", JSON.stringify(req.body).length);
+export const generateContent = async (req, res, next) => {
   const { prompt, part = 0 } = req.body;
-  const { label, instr } = PROMPT_SECTIONS[part];
-  try {
-    const fullPrompt = `${prompt}\n\nInstruction: ${instr}`;
-    const content = await main(fullPrompt);
-    return res.status(200).json({ content: content.trim(), part });
-  } catch (err) {
-    console.error("Error generating", label, err);
-    res.status(500).json({ message: `Error generating section ${label}` });
+
+  if (!prompt?.trim()) {
+    throw new AppError("Prompt is required", 400);
   }
+
+  const { label, instr } = PROMPT_SECTIONS[part] || {};
+
+  if (!instr) {
+    throw new AppError("Invalid content section", 400);
+  }
+  const fullPrompt = `${prompt}\n\nInstruction: ${instr}`;
+  const content = await main(fullPrompt);
+  return res.status(200).json({success: true, content: content.trim(), part });
 };
