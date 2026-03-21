@@ -1,5 +1,11 @@
-import express from "express";
 import "dotenv/config";
+import dns from 'dns'
+
+if(process.env.NODE_ENV == 'development'){
+ dns.setServers(['8.8.8.8', '8.8.4.4']);
+}
+
+import express from "express";
 import cors from "cors";
 import connectDB from "../src/lib/db.js";
 import adminRouter from "../src/routes/admin.routes.js";

@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-hot-toast'
+import { useCallback } from "react";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 const AppContext = createContext();
@@ -13,14 +14,15 @@ export const AppProvider = ({ children }) => {
   const [blogs, setBlogs] = useState([]);
   const [input, setInput] = useState("");
 
-  const fetchBlogs = async () => {
+
+  const fetchBlogs = useCallback(async () => {
     try {
       const res = await axios.get("/api/blogs");
       setBlogs(res.data.blogs);
     } catch (error) {
       toast.error(error.response.data.message);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchBlogs();
@@ -40,6 +42,7 @@ export const AppProvider = ({ children }) => {
     setBlogs,
     input,
     setInput,
+    fetchBlogs
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
