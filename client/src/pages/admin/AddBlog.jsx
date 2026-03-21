@@ -4,10 +4,12 @@ import Quill from "quill";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
 import { parse } from "marked";
+import { useNavigate } from "react-router-dom";
 
 const AddBlog = () => {
   const editorRef = useRef(null);
   const quillRef = useRef(null);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
     title: "",
@@ -32,49 +34,53 @@ const AddBlog = () => {
       formData.append("image", image);
 
       const res = await axios.post("/api/blogs", formData);
-      toast.success(res.data.message);
-      setForm({
-        title: "",
-        subTitle: "",
-        category: "All",
-        isPublished: false,
-      });
-      quillRef.current.root.innerHTML = "";
-      
+
+      if (res.data.success) {
+        toast.success(res.data.message);
+        setForm({
+          title: "",
+          subTitle: "",
+          category: "All",
+          isPublished: false,
+        });
+        quillRef.current.root.innerHTML = "";
+        navigate("/");
+      }
     } catch (error) {
-      toast.error(error.response.data.message);
+      const errorMsg = error.response?.data?.message || "Something went wrong";
+      toast.error(errorMsg);
     } finally {
       setIsAdding(false);
     }
   };
 
- const PROMPT_SECTIONS = [
-  {
-    label: "Introduction",
-    instr:
-      "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
-  },
-  {
-    label: "Main Section 1",
-    instr:
-      "Write strictly in 100 words at maximum with a subheading explaining the first key point in simple text format.",
-  },
-  {
-    label: "Main Section 2",
-    instr:
-      "Write strictly in 100 words at maximum under a subheading covering the second key point in simple text format.",
-  },
-  {
-    label: "Main Section 3",
-    instr:
-      "Write strictly in 100 words at maximum under a subheading covering the third key point in simple text format.",
-  },
-  {
-    label: "Conclusion",
-    instr:
-      "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
-  },
-];
+  const PROMPT_SECTIONS = [
+    {
+      label: "Introduction",
+      instr:
+        "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
+    },
+    {
+      label: "Main Section 1",
+      instr:
+        "Write strictly in 100 words at maximum with a subheading explaining the first key point in simple text format.",
+    },
+    {
+      label: "Main Section 2",
+      instr:
+        "Write strictly in 100 words at maximum under a subheading covering the second key point in simple text format.",
+    },
+    {
+      label: "Main Section 3",
+      instr:
+        "Write strictly in 100 words at maximum under a subheading covering the third key point in simple text format.",
+    },
+    {
+      label: "Conclusion",
+      instr:
+        "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
+    },
+  ];
   const generateContent = async () => {
     if (!form.title) return toast.error("Enter a title");
 
