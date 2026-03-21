@@ -162,10 +162,6 @@ export const addComment = async (req, res, next) => {
     throw new AppError("Invalid blog ID", 400);
   }
 
-  if (!name?.trim() || !content) {
-    throw new AppError("Missing required fields!", 400);
-  }
-
   const blog = await Blog.findById(blogId);
 
   if (!blog) {
@@ -207,10 +203,6 @@ export const getBlogComments = async (req, res, next) => {
 
 export const generateContent = async (req, res, next) => {
   const { prompt, part = 0 } = req.body;
-
-  if (!prompt?.trim()) {
-    throw new AppError("Prompt is required", 400);
-  }
 
   const { label, instr } = PROMPT_SECTIONS[part] || {};
 

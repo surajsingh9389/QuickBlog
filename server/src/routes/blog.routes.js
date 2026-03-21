@@ -12,6 +12,8 @@ import {
 import upload from "../middleware/multer.js";
 import protectRoute from "../middleware/auth.middleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { validate } from "../middleware/validate.js";
+import { commentSchema, generateSchema } from "../validations/blog.validation.js";
 
 const blogRouter = express.Router();
 
@@ -31,13 +33,13 @@ blogRouter.delete("/:blogId", protectRoute, asyncHandler(deleteBlogId));
 blogRouter.patch("/:blogId/publish", protectRoute, asyncHandler(togglePublish));
 
 // Add comment to blog 
-blogRouter.post("/:blogId/comments", asyncHandler(addComment));
+blogRouter.post("/:blogId/comments", validate(commentSchema), asyncHandler(addComment));
 
 // Get comments of a blog
 blogRouter.get("/:blogId/comments", asyncHandler(getBlogComments));
 
 // Ai content generation
-blogRouter.post("/generate", protectRoute, asyncHandler(generateContent));
+blogRouter.post("/generate", protectRoute, validate(generateSchema) ,asyncHandler(generateContent));
 
 
 export default blogRouter;
