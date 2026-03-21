@@ -17,7 +17,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const res = await axios.get(`/api/admin/dashboard`);
-      setDashboardData(res.data);
+      setDashboardData(res.data.dashboardData);
     } catch (error) {
       toast.error(error.response.data.message);
     }

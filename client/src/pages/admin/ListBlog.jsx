@@ -12,7 +12,7 @@ const ListBlog = () => {
   const fetchBlogs = async () => {
      try{
         const res = await axios.get('/api/admin/blogs');
-        setBlogs(res.data);
+        setBlogs(res.data.blogs);
      }catch(error){
        toast.error(error.response.data.message);
      }

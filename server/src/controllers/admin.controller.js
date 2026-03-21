@@ -1,48 +1,34 @@
+import mongoose from "mongoose";
 import { generateToken } from "../lib/utils.js";
 import Blog from "../models/Blog.js";
 import Comment from "../models/Comment.js";
+import { AppError } from "../utils/AppError.js";
 
-export const adminLogin = async (req, res) => {
+export const adminLogin = async (req, res, next) => {
   const { email, password } = req.body;
-  try {
     if (
       email !== process.env.ADMIN_EMAIL ||
       password !== process.env.ADMIN_PASSWORD
     ) {
-      return res.status(400).json({ message: 'Invalid credentials!' });
+      throw new AppError("Invalid credentials!", 401)
     }
     const token = generateToken(email);
-    res.status(201).json({ success: true, token });
-  } catch (error) {
-    console.error('Error in admin controller', error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
+    res.status(200).json({ success: true, token });
 };
 
-export const getAllBlogsAdmin = async (req, res) => {
-  try {
+export const getAllBlogsAdmin = async (req, res, next) => {
     const blogs = await Blog.find({}).sort({ createdAt: -1 });
-    res.status(200).json(blogs);
-  } catch (error) {
-    console.log("Error in getAllBlogsAdmin controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
+    res.status(200).json({success: true, blogs});
 };
 
-export const getAllComments = async (req, res) => {
-  try {
+export const getAllComments = async (req, res, next) => {
     const comments = await Comment.find({})
       .populate("blog")
       .sort({ createdAt: -1 });
-    res.status(200).json(comments);
-  } catch (error) {
-    console.error("Error in getAllComments controller:", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+    res.status(200).json({success: true, comments});
 };
 
 export const getDashboard = async (req, res) => {
-  try {
     const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(5);
     const blogs = await Blog.countDocuments();
     const comments = await Comment.countDocuments();
@@ -55,31 +41,41 @@ export const getDashboard = async (req, res) => {
       recentBlogs,
     };
 
-    res.status(201).json(dashboardData);
-  } catch (error) {
-    console.error("Error in getDashboard controller:", error.message);
-    return res.status(500).json({ message: "Internal Server Error" });
-  }
+    res.status(200).json({success: true, dashboardData});
 };
 
-export const deleteCommentById = async (req, res) => {
+export const deleteCommentById = async (req, res, next) => {
   const { id } = req.params;
-  try {
+    
+    if(!mongoose.isValidObjectId(id)){
+      throw new AppError("Invalid comment ID", 400);
+    }
+
+    const comment = await Comment.findById(id);
+
+    if(!comment){
+      throw new AppError("Comment not found", 404)
+    }
+
     await Comment.findByIdAndDelete(id);
-    res.status(200).json({ message: "Comment deleted successfully" });
-  } catch (error) {
-    console.log("Error in deleteCommentById controller", error.message);
-    res.status(500).json({ message: "Internal server Error" });
-  }
+    res.status(200).json({ success: true, message: "Comment deleted successfully" });
 };
 
-export const approveCommentbyId = async (req, res) => {
+export const approveCommentbyId = async (req, res, next) => {
   const { id } = req.params;
-  try {
-    await Comment.findByIdAndUpdate(id, { isApproved: true });
-    res.status(200).json({ message: "Comment approve successfully" });
-  } catch (error) {
-    console.log("Error in approveCommentbyId controller", error.message);
-    res.status(500).json({ message: "Internal server Error" });
-  }
+    
+    if(!mongoose.isValidObjectId(id)){
+      throw new AppError("Invalid comment ID", 400)
+    }
+
+    const comment = await Comment.findById(id);
+
+    if(!comment){
+      throw new AppError("Comment not found", 404)
+    }
+
+    comment.isApproved = true;
+    await comment.save();
+
+    res.status(200).json({ success: true, message: "Comment approve successfully" });
 };
