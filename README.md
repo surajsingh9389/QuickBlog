@@ -14,7 +14,7 @@
 - ⚡ **Global Error Handling** – Centralized middleware architecture for consistent, professional API responses.
 - ✍️ **Rich Editor** – Seamless writing experience via **Quill** with real-time markdown support.
 - 🔒 **Secure Auth** – Stateless **JWT-based** Admin Dashboard.
-- 🖼️ **Media Optimization** – Integrated **ImageKit CDN** for **40%** faster image delivery and auto-transformation.
+- 🖼️ **Media Optimization** – Integrated **ImageKit** for **40%** faster image delivery and auto-transformation.
 
 ---
 
