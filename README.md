@@ -2,7 +2,7 @@
 
 🚀 **QuickBlog** is a high-performance, full-stack blogging platform engineered with the MERN stack. It transforms content creation by combining a professional rich-text experience with an **AI-driven engine** for instant, high-quality drafting.
 
-✨ Powered by **Gemini 2.5 Flash**, QuickBlog reduces content creation time by **30%**. The system is built with a "Security-First" philosophy, featuring strict input validation, rate-limiting, and centralized error handling to ensure a robust production environment.
+✨ Powered by **Gemini 2.5 Flash**, QuickBlog reduces content creation time by **68%**. The system is built with a "Security-First" philosophy, featuring strict input validation, rate-limiting, and centralized error handling to ensure a robust production environment.
 
 ---
 
