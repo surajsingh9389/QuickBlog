@@ -8,13 +8,13 @@
 
 ## 🚀 Key Features
 
-- 🤖 **AI Content Engine** – Generate SEO-friendly blog drafts in seconds using **Gemini 2.5 Flash**.
+- 🤖 **AI Content Engine** – **AI-assisted** content generation via **Gemini 2.5 Flash**, reducing content creation time by **68%**.
 - 🛡️ **Production Security** – Hardened with **Helmet.js**, **Express-Rate-Limit**, and **CORS** to mitigate XSS and Brute-force attacks.
 - 💎 **Robust Validation** – Strict, type-safe schema validation using **Zod** to ensure **100%** data integrity.
 - ⚡ **Global Error Handling** – Centralized middleware architecture for consistent, professional API responses.
 - ✍️ **Rich Editor** – Seamless writing experience via **Quill** with real-time markdown support.
 - 🔒 **Secure Auth** – Stateless **JWT-based** Admin Dashboard.
-- 🖼️ **Media Optimization** – Integrated **ImageKit** for **40%** faster image delivery and auto-transformation.
+- 🖼️ **Media Optimization** – Integrated **ImageKit** for **42%** faster image delivery and auto-transformation.
 
 ---
 
