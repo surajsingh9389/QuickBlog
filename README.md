@@ -10,7 +10,7 @@
 
 - 🤖 **AI Content Engine** – **AI-assisted** content generation via **Gemini 2.5 Flash**, reducing content creation time by **68%**.
 - 🛡️ **Production Security** – Hardened with **Helmet.js**, **Express-Rate-Limit**, and **CORS** to mitigate XSS and Brute-force attacks.
-- 💎 **Robust Validation** – Strict, type-safe schema validation using **Zod** to ensure **100%** data integrity.
+- 💎 **Robust Validation** – Strict, type-safe schema validation using **Zod** to ensure data integrity.
 - ⚡ **Global Error Handling** – Centralized middleware architecture for consistent, professional API responses.
 - ✍️ **Rich Editor** – Seamless writing experience via **Quill** with real-time markdown support.
 - 🔒 **Secure Auth** – Stateless **JWT-based** Admin Dashboard.
