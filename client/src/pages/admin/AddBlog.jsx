@@ -54,56 +54,23 @@ const AddBlog = () => {
     }
   };
 
-  const PROMPT_SECTIONS = [
-    {
-      label: "Introduction",
-      instr:
-        "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
-    },
-    {
-      label: "Main Section 1",
-      instr:
-        "Write strictly in 100 words at maximum with a subheading explaining the first key point in simple text format.",
-    },
-    {
-      label: "Main Section 2",
-      instr:
-        "Write strictly in 100 words at maximum under a subheading covering the second key point in simple text format.",
-    },
-    {
-      label: "Main Section 3",
-      instr:
-        "Write strictly in 100 words at maximum under a subheading covering the third key point in simple text format.",
-    },
-    {
-      label: "Conclusion",
-      instr:
-        "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
-    },
-  ];
   const generateContent = async () => {
     if (!form.title) return toast.error("Enter a title");
 
-    let full = "";
-    setGenerating(true);
-
-    for (let part = 0; part < PROMPT_SECTIONS.length; part++) {
+      setGenerating(true);
       toast(`Building...`);
       try {
-        const { data } = await axios.post("/api/blogs/generate", {
-          prompt: form.title,
-          part,
+         const res = await axios.post("/api/blogs/generate", {
+          blogTitle: form.title
         });
-        full += part === 0 ? data.content : `\n\n${data.content}`;
-        quillRef.current.root.innerHTML = parse(full);
-      } catch (error) {
-        toast.error(`Failed to generate try again!`);
-        break;
+        const { content } = res.data;
+        quillRef.current.root.innerHTML = parse(content);
+        toast.success("Blog generated!");
+      } catch (err) {
+        const errorMessage = err.response?.data?.message || "Failed to generate try again!";
+        toast.error(errorMessage);
       }
-    }
-
-    setGenerating(false);
-    toast.success("Blog generated!");
+      setGenerating(false);
   };
 
   useEffect(() => {

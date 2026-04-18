@@ -39,7 +39,7 @@ blogRouter.post("/:blogId/comments", validate(commentSchema), asyncHandler(addCo
 blogRouter.get("/:blogId/comments", asyncHandler(getBlogComments));
 
 // Ai content generation
-blogRouter.post("/generate", protectRoute, validate(generateSchema) ,asyncHandler(generateContent));
+blogRouter.post("/generate", protectRoute, validate(generateSchema), generateContent);
 
 
 export default blogRouter;
