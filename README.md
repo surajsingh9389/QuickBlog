@@ -25,7 +25,7 @@
 - **RESTful API** – Stateless Client-Server communication protocol.
 - **Gemini 2.5 Flash** – Hybrid reasoning model for high-speed, high-quality content generation.
 - **Zod** – Schema-based validation and data sanitization.
-- **Express 5.x** – Advanced routing with native async error handling.
+- **Express** – Advanced routing with native async error handling.
 
 ### Frontend
 - **React.js** (Hooks & Context API)
