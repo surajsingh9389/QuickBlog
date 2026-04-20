@@ -1,10 +1,16 @@
+import { parse, setOptions } from "marked";
 import React, { useEffect, useRef, useState } from "react";
 import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
-import { parse } from "marked";
 import { useNavigate } from "react-router-dom";
+
+
+setOptions({
+  breaks: true,    // converts \n to <br> — prevents merged paragraphs
+  gfm: true,       // GitHub Flavoured Markdown — properly handles * lists
+});
 
 const AddBlog = () => {
   const editorRef = useRef(null);
@@ -63,8 +69,18 @@ const AddBlog = () => {
          const res = await axios.post("/api/blogs/generate", {
           blogTitle: form.title
         });
+
         const { content } = res.data;
-        quillRef.current.root.innerHTML = parse(content);
+
+        // Convert markdown → HTML with proper options
+        const htmlContent = parse(content, { breaks: true, gfm: true });
+
+        // Clear old content first
+        quillRef.current.setText("");
+
+        // Let Quill handle the HTML through its Delta system
+        quillRef.current.clipboard.dangerouslyPasteHTML(0, htmlContent);
+        
         toast.success("Blog generated!");
       } catch (err) {
         const errorMessage = err.response?.data?.message || "Failed to generate try again!";
