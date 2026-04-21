@@ -16,7 +16,10 @@ const PORT = process.env.PORT || 3000;
 await connectDB();
 
 //Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true
+}));
 
 app.use(helmet());
 app.use(morgan("dev"));
