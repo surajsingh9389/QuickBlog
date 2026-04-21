@@ -2,37 +2,9 @@ import fs from "fs/promises";
 import imagekit from "../lib/imagekit.js";
 import Blog from "../models/Blog.js";
 import Comment from "../models/Comment.js";
-import main from "../lib/gemini.js";
+import generateAnswer from "../lib/llm.js";
 import mongoose from "mongoose";
 import { AppError } from "../utils/AppError.js";
-
-const PROMPT_SECTIONS = [
-  {
-    label: "Introduction",
-    instr:
-      "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
-  },
-  {
-    label: "Main Section 1",
-    instr:
-      "Write strictly in 100 words at maximum with a subheading explaining the first key point in simple text format.",
-  },
-  {
-    label: "Main Section 2",
-    instr:
-      "Write strictly in 100 words at maximum under a subheading covering the second key point in simple text format.",
-  },
-  {
-    label: "Main Section 3",
-    instr:
-      "Write strictly in 100 words at maximum under a subheading covering the third key point in simple text format.",
-  },
-  {
-    label: "Conclusion",
-    instr:
-      "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
-  },
-];
 
 export const addBlog = async (req, res, next) => {
   let parsedData;
@@ -202,14 +174,7 @@ export const getBlogComments = async (req, res, next) => {
 };
 
 export const generateContent = async (req, res, next) => {
-  const { prompt, part = 0 } = req.body;
-
-  const { label, instr } = PROMPT_SECTIONS[part] || {};
-
-  if (!instr) {
-    throw new AppError("Invalid content section", 400);
-  }
-  const fullPrompt = `${prompt}\n\nInstruction: ${instr}`;
-  const content = await main(fullPrompt);
-  return res.status(200).json({ success: true, content: content.trim(), part });
+  const { blogTitle } = req.body;
+  const content = await generateAnswer(blogTitle);
+  return res.status(200).json({ success: true, content: content.trim()});
 };

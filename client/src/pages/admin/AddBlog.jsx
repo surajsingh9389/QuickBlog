@@ -1,10 +1,16 @@
+import { parse, setOptions } from "marked";
 import React, { useEffect, useRef, useState } from "react";
 import { assets, blogCategories } from "../../assets/assets";
 import Quill from "quill";
 import { useAppContext } from "../../context/AppContext";
 import toast from "react-hot-toast";
-import { parse } from "marked";
 import { useNavigate } from "react-router-dom";
+
+
+setOptions({
+  breaks: true,    // converts \n to <br> — prevents merged paragraphs
+  gfm: true,       // GitHub Flavoured Markdown — properly handles * lists
+});
 
 const AddBlog = () => {
   const editorRef = useRef(null);
@@ -54,56 +60,33 @@ const AddBlog = () => {
     }
   };
 
-  const PROMPT_SECTIONS = [
-    {
-      label: "Introduction",
-      instr:
-        "Write a 4–6 sentence engaging intro that hooks the reader in simple text format.",
-    },
-    {
-      label: "Main Section 1",
-      instr:
-        "Write strictly in 100 words at maximum with a subheading explaining the first key point in simple text format.",
-    },
-    {
-      label: "Main Section 2",
-      instr:
-        "Write strictly in 100 words at maximum under a subheading covering the second key point in simple text format.",
-    },
-    {
-      label: "Main Section 3",
-      instr:
-        "Write strictly in 100 words at maximum under a subheading covering the third key point in simple text format.",
-    },
-    {
-      label: "Conclusion",
-      instr:
-        "Write strictly between a 2–3 sentence concluding paragraph with a call-to-action in simple text format.",
-    },
-  ];
   const generateContent = async () => {
     if (!form.title) return toast.error("Enter a title");
 
-    let full = "";
-    setGenerating(true);
-
-    for (let part = 0; part < PROMPT_SECTIONS.length; part++) {
+      setGenerating(true);
       toast(`Building...`);
       try {
-        const { data } = await axios.post("/api/blogs/generate", {
-          prompt: form.title,
-          part,
+         const res = await axios.post("/api/blogs/generate", {
+          blogTitle: form.title
         });
-        full += part === 0 ? data.content : `\n\n${data.content}`;
-        quillRef.current.root.innerHTML = parse(full);
-      } catch (error) {
-        toast.error(`Failed to generate try again!`);
-        break;
-      }
-    }
 
-    setGenerating(false);
-    toast.success("Blog generated!");
+        const { content } = res.data;
+
+        // Convert markdown → HTML with proper options
+        const htmlContent = parse(content, { breaks: true, gfm: true });
+
+        // Clear old content first
+        quillRef.current.setText("");
+
+        // Let Quill handle the HTML through its Delta system
+        quillRef.current.clipboard.dangerouslyPasteHTML(0, htmlContent);
+        
+        toast.success("Blog generated!");
+      } catch (err) {
+        const errorMessage = err.response?.data?.message || "Failed to generate try again!";
+        toast.error(errorMessage);
+      }
+      setGenerating(false);
   };
 
   useEffect(() => {
