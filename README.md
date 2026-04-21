@@ -1,20 +1,20 @@
 # 📝 QuickBlog: AI-Powered Production-Ready CMS
 
-🚀 **QuickBlog** is a high-performance, full-stack blogging platform. It is engineered with the MERN stack. It transforms content creation by combining a professional rich-text experience with an **AI-driven engine** and a **RESTful API architecture** for seamless data management.
+🚀 **QuickBlog** is a high-performance, full-stack blogging platform engineered with the MERN stack. It transforms content creation by combining a professional rich-text experience with an **AI-driven engine** and a **RESTful API architecture** for seamless data management.
 
-✨ QuickBlog is powered by **Gemini 2.5 Flash**. It reduces content creation time by **68%**. The system is built with a "Security-First" philosophy. It features strict input validation, rate-limiting, and centralized error handling to ensure a robust production environment.
+✨ QuickBlog is powered by **Meta Llama-3.1-8B-Instruct** (via Hugging Face). It reduces content creation time by **68%**. The system is built with a "Security-First" philosophy, featuring strict input validation, rate-limiting, and centralized error handling to ensure a robust production environment.
 
 ---
 
 ## 🚀 Key Features
 
-- 🤖 **AI Content Engine** – **AI-assisted** content generation via **Gemini 2.5 Flash**, reducing drafting time by **68%**.
+- 🤖 **AI Content Engine** – **AI-assisted** content generation via **Llama-3.1-8B**, featuring strict guardrails and output validation to ensure blog-only responses.
 - 🌐 **RESTful Architecture** – Standardized, resource-oriented API design using standard HTTP methods for scalable data handling.
 - 🛡️ **Production Security** – Hardened with **Helmet.js**, **Express-Rate-Limit**, and **CORS** to mitigate XSS and Brute-force attacks.
-- 💎 **Robust Validation** – Strict, type-safe schema validation using **Zod** to ensure data integrity.
+- 💎 **Robust Validation** – Strict, type-safe schema validation using **Zod** to ensure data integrity and prevent vague query injections.
 - ⚡ **Global Error Handling** – Centralized middleware architecture for consistent, professional JSON responses.
 - ✍️ **Rich Editor** – Seamless writing experience via **Quill** with real-time markdown support.
-- 🔒 **Secure Auth** – Stateless **JWT-based** Admin Dashboard.
+- 🔐 **Secure Auth** – Stateless **JWT-based** Admin Dashboard.
 - 🖼️ **Media Optimization** – Integrated **ImageKit** for **42%** faster image delivery and auto-transformation.
 
 ---
@@ -23,7 +23,7 @@
 
 ### AI & Core Logic
 - **RESTful API** – Stateless Client-Server communication protocol.
-- **Gemini 2.5 Flash** – Hybrid reasoning model for high-speed, high-quality content generation.
+- **Llama-3.1-8B-Instruct** – Advanced open-source LLM optimized for instruction following and blog generation.
 - **Zod** – Schema-based validation and data sanitization.
 - **Express** – Advanced routing with native async error handling.
 
