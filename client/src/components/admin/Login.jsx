@@ -14,12 +14,14 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await axios.post("/api/admin/login", form);
-      setToken(res.data.token);
-      localStorage.setItem("token", res.data.token);
-      axios.defaults.headers.common['Authorization'] = `${res.data.token}`;
+      const token = res.data.token;
+      setToken(token);
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       toast.success("Login successfully");
     } catch (error) {
-      toast.error(error.response.data.message);
+      const message = error.response?.data?.message || "Something went wrong";
+      toast.error(message);
     }
   };
 

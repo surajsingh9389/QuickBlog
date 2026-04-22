@@ -1,20 +1,7 @@
 import mongoose from "mongoose";
-import { generateToken } from "../lib/utils.js";
-import Blog from "../models/Blog.js";
-import Comment from "../models/Comment.js";
+import Blog from "../models/blog.model.js";
+import Comment from "../models/comment.model.js";
 import { AppError } from "../utils/AppError.js";
-
-export const adminLogin = async (req, res, next) => {
-  const { email, password } = req.body;
-    if (
-      email !== process.env.ADMIN_EMAIL ||
-      password !== process.env.ADMIN_PASSWORD
-    ) {
-      throw new AppError("Invalid credentials!", 401)
-    }
-    const token = generateToken(email);
-    res.status(200).json({ success: true, token });
-};
 
 export const getAllBlogsAdmin = async (req, res, next) => {
     const blogs = await Blog.find({}).sort({ createdAt: -1 });

@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import imagekit from "../lib/imagekit.js";
-import Blog from "../models/Blog.js";
-import Comment from "../models/Comment.js";
+import Blog from "../models/blog.model.js";
+import Comment from "../models/comment.model.js";
 import generateAnswer from "../lib/llm.js";
 import mongoose from "mongoose";
 import { AppError } from "../utils/AppError.js";
