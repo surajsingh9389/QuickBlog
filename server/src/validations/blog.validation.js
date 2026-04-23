@@ -42,7 +42,6 @@ const isBlogLikeTitle = (title) => {
 
 // Validation schema for comments
 export const commentSchema = z.object({
-    name: z.string().min(2, "Name is required"),
     content: z.string().min(2, "Content is required")
 });
 

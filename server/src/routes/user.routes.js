@@ -19,7 +19,7 @@ userRouter.get("/", auth, asyncHandler(getAllBlogs));
 userRouter.get("/:blogId", auth, asyncHandler(getBlogById));
 
 // Add comment to blog 
-userRouter.post("/:blogId/comments", auth, validate(commentSchema), asyncHandler(addComment));
+userRouter.post("/:blogId/:userId/comments", auth, validate(commentSchema), asyncHandler(addComment));
 
 // Get comments of a blog
 userRouter.get("/:blogId/comments", auth, asyncHandler(getBlogComments));

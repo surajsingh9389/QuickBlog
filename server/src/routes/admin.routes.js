@@ -1,10 +1,11 @@
 import express from "express"
-import { approveCommentbyId, deleteCommentById, getAllBlogsAdmin, getAllComments, getDashboard } from '../controllers/admin.controller.js'
+import { approveCommentbyId, deleteCommentById, getAllBlogsAdmin, getAllComments, getDashboard, addBlog, deleteBlogId, generateContent, togglePublish } from '../controllers/admin.controller.js'
 import { asyncHandler } from "../utils/asyncHandler.js";
 import auth from "../middleware/auth.middleware.js";
 import { authorize } from "../middleware/authorize.middleware.js";
 import { generateSchema } from "../validations/blog.validation.js";
-import { addBlog, deleteBlogId, generateContent, togglePublish } from "../controllers/user.controller.js";
+import upload from "../middleware/multer.middleware.js";
+import { validate } from "../middleware/validate.middleware.js";
 
 const adminRouter = express.Router();
 
