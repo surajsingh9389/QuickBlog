@@ -11,11 +11,10 @@ import toast from 'react-hot-toast'
 const Blog = () => {
   const {id} = useParams(null)
 
-  const {axios} = useAppContext();
+  const { axios, user} = useAppContext();
 
   const [data, setData] = useState(null)
   const [comments, setComments] = useState([])
-  const [name, setName] = useState('');
   const [content, setContent] = useState('');
 
   const fetchBlogData = async ()=>{
@@ -39,9 +38,8 @@ const Blog = () => {
   const addComment = async (e) => {
      e.preventDefault();
      try{
-      const res = await axios.post(`/api/blogs/${id}/comments`, {name, content});
+      const res = await axios.post(`/api/blogs/${id}/${user.id}/comments`, { content });
       toast.success(res.data.message);
-      setName('');
       setContent('');
      }catch(error){
        toast.error(error.response.data.message);
@@ -94,7 +92,6 @@ const Blog = () => {
         <div className='max-w-3xl mx-auto'>
             <p className='font-semibold mb-4'>Add your comment</p>
             <form onSubmit={addComment} className='flex flex-col items-start gap-4 max-w-lg'>
-              <input onChange={(e)=>setName(e.target.value)} value={name} type="text" placeholder='Name' className='w-full p-2 border border-gray-300 rounded outline-none' required/>
 
               <textarea onChange={(e)=>setContent(e.target.value)} value={content} placeholder='Comment' className='w-full p-2 border border-gray-300 rounded outline-none h-48' required></textarea>
 

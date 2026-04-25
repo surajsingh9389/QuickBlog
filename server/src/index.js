@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import connectDB from "./lib/db.js";
 import adminRouter from "./routes/admin.routes.js";
-import userRouter from "./routes/user.routes.js";
+import blogRouter from "./routes/blog.routes.js";
 import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import helmet from "helmet";
 import morgan from "morgan";
@@ -35,7 +35,7 @@ app.use(express.json());
 
 //Routes
 app.use("/api/admin", adminRouter);
-app.use("/api/users", userRouter);
+app.use("/api/blogs", blogRouter);
 app.use("/api/auth", authRouter)
 
 app.get("/", (req, res) => {

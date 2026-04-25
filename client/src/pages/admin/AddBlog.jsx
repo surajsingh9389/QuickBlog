@@ -39,7 +39,7 @@ const AddBlog = () => {
       formData.append("blog", JSON.stringify(blog));
       formData.append("image", image);
 
-      const res = await axios.post("/api/blogs", formData);
+      const res = await axios.post("/api/admin", formData);
 
       if (res.data.success) {
         toast.success(res.data.message);
@@ -66,7 +66,7 @@ const AddBlog = () => {
       setGenerating(true);
       toast(`Building...`);
       try {
-         const res = await axios.post("/api/blogs/generate", {
+         const res = await axios.post("/api/admin/generate", {
           blogTitle: form.title
         });
 

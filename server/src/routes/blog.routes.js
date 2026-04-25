@@ -4,24 +4,24 @@ import {
   getAllBlogs,
   getBlogById,
   getBlogComments,
-} from "../controllers/user.controller.js";
+} from "../controllers/blog.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { validate } from "../middleware/validate.middleware.js";
 import { commentSchema } from "../validations/blog.validation.js";
 import auth from "../middleware/auth.middleware.js";
 
-const userRouter = express.Router();
+const blogRouter = express.Router();
 
 // Get all blogs 
-userRouter.get("/", auth, asyncHandler(getAllBlogs));
+blogRouter.get("/", auth, asyncHandler(getAllBlogs));
 
 // Get single blog 
-userRouter.get("/:blogId", auth, asyncHandler(getBlogById));
+blogRouter.get("/:blogId", auth, asyncHandler(getBlogById));
 
 // Add comment to blog 
-userRouter.post("/:blogId/:userId/comments", auth, validate(commentSchema), asyncHandler(addComment));
+blogRouter.post("/:blogId/:userId/comments", auth, validate(commentSchema), asyncHandler(addComment));
 
 // Get comments of a blog
-userRouter.get("/:blogId/comments", auth, asyncHandler(getBlogComments));
+blogRouter.get("/:blogId/comments", auth, asyncHandler(getBlogComments));
 
-export default userRouter;
+export default blogRouter;

@@ -9,7 +9,7 @@ export const register = async (req, res, next) => {
   // Check if user is already in the database
   const userExists = await User.findOne({ email });
   if (userExists) {
-    throw new AppError("User already exists", 409);
+    throw new AppError("Email is already registered", 409);
   }
 
   // Secure password before saving
