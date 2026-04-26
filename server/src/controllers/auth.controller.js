@@ -69,3 +69,12 @@ export const login = async (req, res, next) => {
   });
 };
 
+// Called on frontend startup to check if stored token is still valid
+export const verifyToken = async (req, res) => {
+  // req.user is already populated by the auth middleware
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
+};
+

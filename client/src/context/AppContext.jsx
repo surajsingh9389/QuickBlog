@@ -36,6 +36,25 @@ export const AppProvider = ({ children }) => {
     }
   }, [token, fetchBlogs]);
 
+  // On startup: validate the token against the backend.
+  // If it's expired or invalid (401), clear it so Auth page shows instead of Home.
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (!storedToken) return;
+
+    axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+    axios.get('/api/auth/verify')
+      .catch((error) => {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          setToken(null);
+          setUser(null);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+          delete axios.defaults.headers.common['Authorization'];
+        }
+      });
+  }, []);
+
   const logout = () => {
     setToken(null);
     setUser(null);
