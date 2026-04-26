@@ -1,45 +1,27 @@
 import express from "express";
 import {
-  addBlog,
   addComment,
-  deleteBlogId,
-  generateContent,
   getAllBlogs,
   getBlogById,
   getBlogComments,
-  togglePublish,
 } from "../controllers/blog.controller.js";
-import upload from "../middleware/multer.js";
-import protectRoute from "../middleware/auth.middleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { validate } from "../middleware/validate.js";
-import { commentSchema, generateSchema } from "../validations/blog.validation.js";
+import { validate } from "../middleware/validate.middleware.js";
+import { commentSchema } from "../validations/blog.validation.js";
+import auth from "../middleware/auth.middleware.js";
 
 const blogRouter = express.Router();
 
-// Create blog 
-blogRouter.post("/", protectRoute, upload.single("image"), asyncHandler(addBlog));
-
 // Get all blogs 
-blogRouter.get("/", asyncHandler(getAllBlogs));
+blogRouter.get("/", auth, asyncHandler(getAllBlogs));
 
 // Get single blog 
-blogRouter.get("/:blogId", asyncHandler(getBlogById));
-
-// Delete blog 
-blogRouter.delete("/:blogId", protectRoute, asyncHandler(deleteBlogId));
-
-// Toggle pulish 
-blogRouter.patch("/:blogId/publish", protectRoute, asyncHandler(togglePublish));
+blogRouter.get("/:blogId", auth, asyncHandler(getBlogById));
 
 // Add comment to blog 
-blogRouter.post("/:blogId/comments", validate(commentSchema), asyncHandler(addComment));
+blogRouter.post("/:blogId/:userId/comments", auth, validate(commentSchema), asyncHandler(addComment));
 
 // Get comments of a blog
-blogRouter.get("/:blogId/comments", asyncHandler(getBlogComments));
-
-// Ai content generation
-blogRouter.post("/generate", protectRoute, validate(generateSchema), generateContent);
-
+blogRouter.get("/:blogId/comments", auth, asyncHandler(getBlogComments));
 
 export default blogRouter;

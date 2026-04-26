@@ -4,10 +4,11 @@ import cors from "cors";
 import connectDB from "./lib/db.js";
 import adminRouter from "./routes/admin.routes.js";
 import blogRouter from "./routes/blog.routes.js";
-import { errorHandler } from "./middleware/errorHandler.js";
+import { errorHandler } from "./middleware/errorHandler.middleware.js";
 import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -35,6 +36,8 @@ app.use(express.json());
 //Routes
 app.use("/api/admin", adminRouter);
 app.use("/api/blogs", blogRouter);
+app.use("/api/auth", authRouter)
+
 app.get("/", (req, res) => {
   res.status(200).json({
   success: true,
