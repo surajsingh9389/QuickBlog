@@ -44,6 +44,10 @@ export const AppProvider = ({ children }) => {
 
     axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
     axios.get('/api/auth/verify')
+      .then((res) => {
+        setUser(res.data.user);
+        localStorage.setItem('user', JSON.stringify(res.data.user));
+      })
       .catch((error) => {
         if (error.response?.status === 401 || error.response?.status === 403) {
           setToken(null);

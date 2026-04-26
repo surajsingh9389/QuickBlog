@@ -22,14 +22,17 @@ const App = () => {
           If no token, the Home path renders Auth (Login/Signup).
           If token exists, it renders the actual Home component.
         */}
-        <Route path='/' element={token ? <Home /> : <Auth />} />
+        <Route path='/' element={token && user ? <Home /> : <Auth />} />
+
+        {/* DEDICATED LOGIN ROUTE: Always accessible. Redirects to Home if already logged in. */}
+        <Route path='/login' element={token && user ? <Navigate to="/" /> : <Auth />} />
 
         {/* PROTECTED CONTENT ROUTES:
           These check if a token exists. If not, they redirect to root (which shows Auth).
         */}
         <Route 
           path='/blog/:id' 
-          element={token ? <Blog /> : <Navigate to="/" />} 
+          element={token && user ? <Blog /> : <Navigate to="/" />} 
         />
 
         {/* ADMIN ROUTES:

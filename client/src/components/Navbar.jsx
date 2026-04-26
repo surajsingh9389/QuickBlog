@@ -26,7 +26,7 @@ const Navbar = () => {
             </button>
           </>
         ) : (
-          <button onClick={()=> navigate('/')} className="flex items-center gap-2 rounded-full text-sm cursor-pointer bg-primary text-white px-5 py-2.5">
+          <button onClick={()=> navigate('/login')} className="flex items-center gap-2 rounded-full text-sm cursor-pointer bg-primary text-white px-5 py-2.5">
             Login
             <img src={assets.arrow} alt="arrow" className="w-3" />
           </button>
